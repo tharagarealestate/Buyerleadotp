@@ -1,0 +1,10 @@
+What this gives you immediately
+
+OTP-verified phone numbers (no fake leads).
+
+Buyer profiling (budget, area, type, timeline, financing).
+
+Netlify Forms capture (reliable storage + export + webhooks).
+
+UTM/referrer capture (see which ad or post worked).
+

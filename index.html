@@ -1,0 +1,238 @@
+<!-- ===== Verified Buyer Form (Drop-in) ===== -->
+<section id="buyer-intake" style="max-width: 760px; margin: 0 auto; padding: 24px;">
+  <h3 style="font-family: 'Poppins', sans-serif; font-weight: 600; text-align:center; margin-bottom: 12px;">
+    Get Matched to Verified Properties
+  </h3>
+  <p style="text-align:center; margin:0 0 16px;">OTP-verified leads only. No spam. No brokerage.</p>
+
+  <!-- Netlify Forms attrs -->
+  <form name="buyer-intake"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        data-netlify-recaptcha="true"
+        id="buyerForm"
+        style="background:#FAF5EF; border-radius:12px; padding:16px; font-family:'Poppins',sans-serif">
+
+    <!-- Netlify Forms hidden helpers -->
+    <input type="hidden" name="form-name" value="buyer-intake" />
+    <p style="display:none;">
+      <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
+    </p>
+
+    <!-- UTM + referrer capture -->
+    <input type="hidden" name="utm_source" id="utm_source">
+    <input type="hidden" name="utm_medium" id="utm_medium">
+    <input type="hidden" name="utm_campaign" id="utm_campaign">
+    <input type="hidden" name="referrer" id="referrer">
+    <input type="hidden" name="otp_verified" id="otp_verified" value="false">
+
+    <!-- Lead basics -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <label style="display:block;">
+        <span>Name</span>
+        <input required type="text" name="name" placeholder="Your full name"
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
+      </label>
+
+      <label style="display:block;">
+        <span>Email</span>
+        <input required type="email" name="email" placeholder="you@example.com"
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
+      </label>
+    </div>
+
+    <!-- Phone + OTP -->
+    <div style="display:grid; grid-template-columns:2fr 1fr; gap:12px; margin-top:12px;">
+      <label style="display:block;">
+        <span>Phone (India)</span>
+        <input required type="tel" name="phone" id="phone"
+               pattern="^[6-9]\\d{9}$"
+               placeholder="10-digit mobile number"
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
+      </label>
+
+      <button type="button" id="sendOtpBtn"
+              style="align-self:end; padding:10px; border:none; border-radius:8px; background:#0e0e0e; color:#fff; cursor:pointer;">
+        Send OTP
+      </button>
+    </div>
+
+    <div id="otpBlock" style="display:none; margin-top:12px;">
+      <div style="display:grid; grid-template-columns:2fr 1fr; gap:12px;">
+        <input type="text" id="otpCode" placeholder="Enter OTP"
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
+        <button type="button" id="verifyOtpBtn"
+                style="padding:10px; border:none; border-radius:8px; background:#0e0e0e; color:#fff; cursor:pointer;">
+          Verify OTP
+        </button>
+      </div>
+      <small id="otpStatus" style="display:block; margin-top:6px;"></small>
+    </div>
+
+    <!-- Buyer profiling -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
+      <label style="display:block;">
+        <span>Preferred City / Area</span>
+        <input required type="text" name="location" placeholder="e.g., Anna Nagar, OMR, Coimbatore"
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
+      </label>
+
+      <label style="display:block;">
+        <span>Budget</span>
+        <select required name="budget"
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
+          <option value="">Select</option>
+          <option>₹50L – ₹1Cr</option>
+          <option>₹1Cr – ₹2Cr</option>
+          <option>₹2Cr – ₹3Cr</option>
+          <option>₹3Cr+</option>
+        </select>
+      </label>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
+      <label style="display:block;">
+        <span>Property Type</span>
+        <select required name="property_type"
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
+          <option value="">Select</option>
+          <option>Apartment</option>
+          <option>Villa</option>
+          <option>Plot</option>
+          <option>Commercial</option>
+        </select>
+      </label>
+
+      <label style="display:block;">
+        <span>Buying Timeline</span>
+        <select required name="timeline"
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
+          <option value="">Select</option>
+          <option>ASAP (0–30 days)</option>
+          <option>1–3 months</option>
+          <option>3–6 months</option>
+          <option>Just researching</option>
+        </select>
+      </label>
+    </div>
+
+    <label style="display:block; margin-top:12px;">
+      <span>Financing</span>
+      <select required name="financing"
+              style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
+        <option value="">Select</option>
+        <option>Loan pre-approved</option>
+        <option>Loan required</option>
+        <option>Self-funded</option>
+      </select>
+    </label>
+
+    <label style="display:block; margin-top:12px;">
+      <span>Anything else?</span>
+      <textarea name="notes" rows="3" placeholder="Bedrooms, amenities, exact localities..."
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;"></textarea>
+    </label>
+
+    <!-- Your existing Google reCAPTCHA v2/v3 widget works with Netlify Forms -->
+    <div data-netlify-recaptcha="true" style="margin-top:12px;"></div>
+
+    <button id="submitBtn" type="submit" disabled
+            style="margin-top:14px; width:100%; padding:12px; border:none; border-radius:10px; background:#0e0e0e; color:#fff; font-weight:600; cursor:not-allowed;">
+      Get My Property Matches
+    </button>
+
+    <small style="display:block; margin-top:8px; opacity:0.8;">
+      By submitting, you agree to be contacted by Tharaga. OTP verification is required to prevent spam.
+    </small>
+  </form>
+
+  <!-- Firebase reCAPTCHA mount (invisible) -->
+  <div id="otp-recaptcha" style="height:0;"></div>
+</section>
+
+<!-- ===== Firebase + OTP Script (place before </body>) ===== -->
+<script type="module">
+  // 1) Initialize Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_FIREBASE_API_KEY",
+    authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+    projectId: "YOUR_FIREBASE_PROJECT_ID",
+    appId: "YOUR_FIREBASE_APP_ID"
+  };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // 2) Helpers: UTM + referrer capture
+  const params = new URLSearchParams(window.location.search);
+  document.getElementById('utm_source').value = params.get('utm_source') || '';
+  document.getElementById('utm_medium').value = params.get('utm_medium') || '';
+  document.getElementById('utm_campaign').value = params.get('utm_campaign') || '';
+  document.getElementById('referrer').value = document.referrer || '';
+
+  // 3) OTP flow
+  const phoneInput = document.getElementById('phone');
+  const sendOtpBtn = document.getElementById('sendOtpBtn');
+  const otpBlock = document.getElementById('otpBlock');
+  const otpCode = document.getElementById('otpCode');
+  const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+  const otpStatus = document.getElementById('otpStatus');
+  const submitBtn = document.getElementById('submitBtn');
+  const otpVerifiedField = document.getElementById('otp_verified');
+
+  // Firebase requires a reCAPTCHA verifier for phone auth
+  let appVerifier;
+  function setupRecaptcha() {
+    appVerifier = new RecaptchaVerifier('otp-recaptcha', {
+      size: 'invisible'
+    }, auth);
+  }
+  setupRecaptcha();
+
+  let confirmationResult = null;
+
+  sendOtpBtn.addEventListener('click', async () => {
+    const raw = phoneInput.value.trim();
+    if(!/^[6-9]\d{9}$/.test(raw)) {
+      alert('Enter a valid 10-digit Indian mobile number.');
+      return;
+    }
+    try {
+      sendOtpBtn.disabled = true;
+      const e164 = '+91' + raw;
+      confirmationResult = await signInWithPhoneNumber(auth, e164, appVerifier);
+      otpBlock.style.display = 'block';
+      otpStatus.textContent = 'OTP sent. Please check your SMS.';
+    } catch (err) {
+      console.error(err);
+      otpStatus.textContent = 'Could not send OTP. Please try again.';
+      sendOtpBtn.disabled = false;
+      setupRecaptcha(); // re-init on failure
+    }
+  });
+
+  verifyOtpBtn.addEventListener('click', async () => {
+    try {
+      const code = otpCode.value.trim();
+      const res = await confirmationResult.confirm(code);
+      otpStatus.textContent = 'Verified ✅';
+      otpVerifiedField.value = 'true';
+      submitBtn.disabled = false;
+      submitBtn.style.cursor = 'pointer';
+    } catch (err) {
+      console.error(err);
+      otpStatus.textContent = 'Invalid OTP. Please try again.';
+    }
+  });
+
+  // Optional hard block on submit if OTP not verified
+  document.getElementById('buyerForm').addEventListener('submit', (e) => {
+    if (otpVerifiedField.value !== 'true') {
+      e.preventDefault();
+      alert('Please verify OTP before submitting.');
+    }
+  });
+</script>
