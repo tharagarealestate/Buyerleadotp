@@ -135,3 +135,72 @@
   font-size: 13px;
   color: #333;
 }
+
+
+/* ========== MOBILE COMPACT MODE (to prevent inner scroll in iframe) ========== */
+@media (max-width:640px){
+
+  /* tighten outer spacing */
+  #buyer-intake{
+    margin: 12px auto;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+
+  /* compact grids */
+  .grid-2{
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .grid-right-btn{
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+
+  /* smaller labels */
+  #buyer-intake label{
+    font-size: 12px;
+    margin-bottom: 2px;
+  }
+
+  /* shrink inputs */
+  #buyer-intake input,
+  #buyer-intake select{
+    height: 36px;
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+  #buyer-intake textarea{
+    min-height: 70px;
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+
+  /* OTP inputs smaller */
+  .otp-container{
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .otp-input{
+    width: 32px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  /* compact buttons */
+  #sendOtpBtn,
+  #verifyOtpBtn,
+  #submitBtn{
+    height: 36px;
+    padding: 0 12px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+
+  /* status text smaller */
+  #otpStatus{
+    font-size: 11px;
+    margin-top: 4px;
+  }
+}
