@@ -1,5 +1,5 @@
 /* Container hover */
-.buyer-container {
+buyer-intake {
   max-width: 760px;
   margin: 0 auto;
   padding: 24px;
@@ -9,18 +9,18 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.buyer-container:hover {
+.buyer-intake:hover {
   transform: translateY(-2px);
   box-shadow: 0 16px 36px rgba(110, 13, 37, 0.16);
 }
 
 /* Headings */
-.buyer-container h3 {
+.buyer-intake h3 {
   font-weight: 600;
   text-align: center;
   margin-bottom: 12px;
 }
-.buyer-container p {
+buyer-intake p {
   text-align: center;
   margin: 0 0 16px;
 }
