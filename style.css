@@ -19,24 +19,25 @@
 #buyer-intake, #buyer-intake * { box-sizing: border-box; }
 
 /* ===== 2-column grids ===== */
+/* Replace your current .grid-2 / grid styles */
 .grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 12px;
   margin-top: 12px;
-  align-items: center;              /* <<< centers input & button vertically */
+  align-items: center; /* keeps everything baseline-aligned */
+  flex-wrap: nowrap;   /* prevent wrapping, keeps columns side by side */
 }
 .grid-right-btn {
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  /* send OTP button stays right-size next to input */
+  flex: none; /* button keeps intrinsic size */
 }
-
-/* Stack on small screens */
+/* Stack on small screens 
 @media (max-width: 640px) {
   .grid-2,
   .grid-2.grid-right-btn {
     grid-template-columns: 1fr;
   }
-}
+}*/
 
 /* ===== Labels & Inputs ===== */
 #buyer-intake label {
