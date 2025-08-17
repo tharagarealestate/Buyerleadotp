@@ -1,0 +1,48 @@
+/* Whole form container */
+.form-container {
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover effect */
+.form-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(110, 13, 37, 0.16);
+}
+
+/* OTP input styling */
+.otp-inputs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.otp-input {
+  width: 40px;
+  height: 48px;
+  font-size: 20px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+.otp-input:focus {
+  border-color: #0e0e0e;
+  outline: none;
+}
+
+/* Buttons */
+#sendOtpBtn,
+#verifyOtpBtn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #0e0e0e;
+  color: #fff;
+  cursor: pointer;
+}
