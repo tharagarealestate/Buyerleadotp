@@ -21,11 +21,10 @@
 /* ===== 2-column grids ===== */
 /* Replace your current .grid-2 / grid styles */
 .grid-2 {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-top: 12px;
-  align-items: center; /* keeps everything baseline-aligned */
-  flex-wrap: nowrap;   /* prevent wrapping, keeps columns side by side */
 }
 .grid-right-btn {
   /* send OTP button stays right-size next to input */
