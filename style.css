@@ -7,7 +7,7 @@
 }
 
 /* ===== Form Card ===== */
-#buyerForm {
+#buyer-intake {
   background: #FAF5EF;
   border-radius: 14px;
   padding: 20px;
@@ -16,22 +16,22 @@
 }
 
 /* Hover effect for entire container */
-#buyerForm:hover {
+#buyer-intake:hover {
   transform: translateY(-2px);
   box-shadow: 0 16px 36px rgba(110, 13, 37, 0.16);
 }
 
 /* ===== Labels and Inputs ===== */
-#buyerForm label {
+#buyer-intake label {
   display: block;
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 4px;
 }
 
-#buyerForm input,
-#buyerForm select,
-#buyerForm textarea {
+#buyer-intake input,
+#buyer-intake select,
+#buyer-intake textarea {
   width: 100%;
   padding: 10px;
   border-radius: 8px;
@@ -41,9 +41,9 @@
   transition: border-color 0.2s ease;
 }
 
-#buyerForm input:focus,
-#buyerForm select:focus,
-#buyerForm textarea:focus {
+#buyer-intake input:focus,
+#buyer-intake select:focus,
+#buyer-intake textarea:focus {
   border-color: #0e0e0e;
   outline: none;
 }
