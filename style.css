@@ -1,23 +1,84 @@
-/* Whole form container */
-.form-container {
-  max-width: 500px;
-  margin: 30px auto;
-  padding: 20px;
-  border: 1px solid #ddd;
+/* Container hover */
+.buyer-container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #FAF5EF;
   border-radius: 12px;
-  background: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  font-family: 'Poppins', sans-serif;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Hover effect */
-.form-container:hover {
-  transform: translateY(-4px);
+.buyer-container:hover {
+  transform: translateY(-2px);
   box-shadow: 0 16px 36px rgba(110, 13, 37, 0.16);
 }
 
-/* OTP input styling */
-.otp-inputs {
+/* Headings */
+.buyer-container h3 {
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.buyer-container p {
+  text-align: center;
+  margin: 0 0 16px;
+}
+
+/* Form elements */
+#buyerForm label {
+  display: block;
+}
+#buyerForm input,
+#buyerForm select,
+#buyerForm textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-family: inherit;
+}
+#buyerForm textarea {
+  resize: vertical;
+}
+
+/* Grids */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+.grid-otp {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* Buttons */
+#sendOtpBtn,
+#verifyOtpBtn,
+#submitBtn {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #0e0e0e;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+}
+#submitBtn {
+  margin-top: 14px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: not-allowed;
+}
+
+/* OTP inputs */
+.otp-container {
   display: flex;
   gap: 8px;
   justify-content: center;
@@ -25,24 +86,13 @@
 }
 .otp-input {
   width: 40px;
-  height: 48px;
+  height: 50px;
   font-size: 20px;
   text-align: center;
-  border: 1px solid #ddd;
+  border: 2px solid #ccc;
   border-radius: 8px;
 }
 .otp-input:focus {
   border-color: #0e0e0e;
   outline: none;
-}
-
-/* Buttons */
-#sendOtpBtn,
-#verifyOtpBtn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  background: #0e0e0e;
-  color: #fff;
-  cursor: pointer;
 }
