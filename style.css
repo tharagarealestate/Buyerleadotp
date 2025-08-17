@@ -1,34 +1,34 @@
-/* Container hover */
-buyer-intake {
+/* ===== Buyer Form Container ===== */
+#buyer-intake {
   max-width: 760px;
-  margin: 0 auto;
+  margin: 40px auto;
   padding: 24px;
-  background: #FAF5EF;
-  border-radius: 12px;
   font-family: 'Poppins', sans-serif;
+}
+
+/* ===== Form Card ===== */
+#buyerForm {
+  background: #FAF5EF;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.buyer-intake:hover {
+/* Hover effect for entire container */
+#buyerForm:hover {
   transform: translateY(-2px);
   box-shadow: 0 16px 36px rgba(110, 13, 37, 0.16);
 }
 
-/* Headings */
-.buyer-intake h3 {
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 12px;
-}
-buyer-intake p {
-  text-align: center;
-  margin: 0 0 16px;
-}
-
-/* Form elements */
+/* ===== Labels and Inputs ===== */
 #buyerForm label {
   display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
 }
+
 #buyerForm input,
 #buyerForm select,
 #buyerForm textarea {
@@ -36,63 +36,71 @@ buyer-intake p {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ddd;
+  font-size: 14px;
   font-family: inherit;
-}
-#buyerForm textarea {
-  resize: vertical;
+  transition: border-color 0.2s ease;
 }
 
-/* Grids */
-.grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 12px;
-}
-.grid-otp {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 12px;
-  margin-top: 12px;
+#buyerForm input:focus,
+#buyerForm select:focus,
+#buyerForm textarea:focus {
+  border-color: #0e0e0e;
+  outline: none;
 }
 
-/* Buttons */
-#sendOtpBtn,
-#verifyOtpBtn,
-#submitBtn {
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  background: #0e0e0e;
-  color: #fff;
-  cursor: pointer;
-  font-weight: 500;
-}
-#submitBtn {
-  margin-top: 14px;
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: not-allowed;
-}
-
-/* OTP inputs */
+/* ===== OTP Inputs ===== */
 .otp-container {
   display: flex;
   gap: 8px;
   justify-content: center;
   margin-bottom: 12px;
 }
+
 .otp-input {
-  width: 40px;
+  width: 42px;
   height: 50px;
   font-size: 20px;
   text-align: center;
   border: 2px solid #ccc;
   border-radius: 8px;
+  transition: border-color 0.2s ease;
 }
+
 .otp-input:focus {
   border-color: #0e0e0e;
   outline: none;
+}
+
+/* ===== Buttons ===== */
+#sendOtpBtn,
+#verifyOtpBtn,
+#submitBtn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #0e0e0e;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+#sendOtpBtn:hover,
+#verifyOtpBtn:hover,
+#submitBtn:hover:enabled {
+  background: #2c2c2c;
+  transform: translateY(-1px);
+}
+
+#submitBtn:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+/* ===== Status Text ===== */
+#otpStatus {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #333;
 }
