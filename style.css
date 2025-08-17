@@ -1,4 +1,4 @@
-/* ===== Buyer Form Container (Entire Section) ===== */
+/* ===== Buyer Form Container (entire section) ===== */
 #buyer-intake {
   max-width: 760px;
   margin: 40px auto;
@@ -11,13 +11,34 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Hover effect for entire container */
+/* Hover/lift */
 #buyer-intake:hover {
   transform: translateY(-4px);
   box-shadow: 0 16px 36px rgba(110, 13, 37, 0.16);
 }
 
-/* ===== Labels and Inputs ===== */
+/* ===== Responsive grid helpers ===== */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px; /* keeps your spacing */
+}
+
+/* Special case: right column is a button (Phone + Send OTP) */
+.grid-right-btn {
+  grid-template-columns: 2fr 1fr;
+}
+
+/* Stack to single column on small screens */
+@media (max-width: 640px) {
+  .grid-2,
+  .grid-2.grid-right-btn {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Labels & Inputs ===== */
 #buyer-intake label {
   display: block;
   font-size: 14px;
@@ -89,4 +110,14 @@
 }
 
 #submitBtn:disabled {
-  b
+  background: #999;
+  cursor: not-allowed;
+}
+
+/* ===== Status Text ===== */
+#otpStatus {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #333;
+}
