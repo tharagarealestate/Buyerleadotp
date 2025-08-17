@@ -52,21 +52,41 @@
                style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
       </label>
 
+      <style>
+        .otp-input {
+          width: 40px;
+          height: 50px;
+          font-size: 20px;
+          text-align: center;
+          border: 2px solid #ccc;
+          border-radius: 8px;
+        }
+        .otp-input:focus {
+          border-color: #0e0e0e;
+          outline: none;
+        }
+      </style>
+
+
       <button type="button" id="sendOtpBtn"
               style="align-self:end; padding:10px; border:none; border-radius:8px; background:#0e0e0e; color:#fff; cursor:pointer;">
         Send OTP
       </button>
     </div>
 
-    <div id="otpBlock" style="display:none; margin-top:12px;">
-      <div style="display:grid; grid-template-columns:2fr 1fr; gap:12px;">
-        <input type="text" id="otpCode" placeholder="Enter OTP"
-               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
-        <button type="button" id="verifyOtpBtn"
-                style="padding:10px; border:none; border-radius:8px; background:#0e0e0e; color:#fff; cursor:pointer;">
-          Verify OTP
-        </button>
+    <div id="otpBlock" style="display:none; margin-top:12px; text-align:center;">
+      <div class="otp-container" style="display:flex; gap:8px; justify-content:center; margin-bottom:12px;">
+        <input type="text" maxlength="1" class="otp-input">
+        <input type="text" maxlength="1" class="otp-input">
+        <input type="text" maxlength="1" class="otp-input">
+        <input type="text" maxlength="1" class="otp-input">
+        <input type="text" maxlength="1" class="otp-input">
+        <input type="text" maxlength="1" class="otp-input">
       </div>
+      <button type="button" id="verifyOtpBtn"
+              style="padding:10px 20px; border:none; border-radius:8px; background:#0e0e0e; color:#fff; cursor:pointer;">
+        Verify OTP
+      </button>
       <small id="otpStatus" style="display:block; margin-top:6px;"></small>
     </div>
 
@@ -177,11 +197,29 @@
   const phoneInput = document.getElementById('phone');
   const sendOtpBtn = document.getElementById('sendOtpBtn');
   const otpBlock = document.getElementById('otpBlock');
-  const otpCode = document.getElementById('otpCode');
+  //const otpCode = document.getElementById('otpCode');
   const verifyOtpBtn = document.getElementById('verifyOtpBtn');
   const otpStatus = document.getElementById('otpStatus');
   const submitBtn = document.getElementById('submitBtn');
   const otpVerifiedField = document.getElementById('otp_verified');
+
+  // ---- NEW: handle OTP input boxes ----
+  const otpInputs = document.querySelectorAll('.otp-input');
+
+  // auto-move focus to next box
+  otpInputs.forEach((input, i) => {
+    input.addEventListener('input', () => {
+      if (input.value && i < otpInputs.length - 1) {
+        otpInputs[i + 1].focus();
+      }
+    });
+  });
+
+  // get OTP value from all boxes
+  function getEnteredOTP() {
+    return Array.from(otpInputs).map(i => i.value).join('');
+  }
+  // ---- END OTP box handling ----
 
   // Firebase requires a reCAPTCHA verifier for phone auth
   let appVerifier;
@@ -216,7 +254,11 @@
 
   verifyOtpBtn.addEventListener('click', async () => {
     try {
-      const code = otpCode.value.trim();
+      const code = getEnteredOTP();
+      if (code.length !== 6) {
+        otpStatus.textContent = 'Please enter all 6 digits.';
+        return;
+      }
       const res = await confirmationResult.confirm(code);
       otpStatus.textContent = 'Verified ✅';
       otpVerifiedField.value = 'true';
@@ -228,6 +270,7 @@
     }
   });
 
+
   // Optional hard block on submit if OTP not verified
   document.getElementById('buyerForm').addEventListener('submit', (e) => {
     if (otpVerifiedField.value !== 'true') {
@@ -236,3 +279,24 @@
     }
   });
 </script>
+
+
+<style>
+  /* Whole OTP section as a card */
+.otp-section {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 20px;
+}
+
+/* Hover effect (same style as filter-container) */
+.otp-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(110, 13, 37, 0.16);
+}
+
+</style>
