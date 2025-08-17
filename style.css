@@ -1,23 +1,19 @@
-/* ===== Buyer Form Container ===== */
+/* ===== Buyer Form Container (Entire Section) ===== */
 #buyer-intake {
   max-width: 760px;
   margin: 40px auto;
   padding: 24px;
   font-family: 'Poppins', sans-serif;
-}
 
-/* ===== Form Card ===== */
-#buyer-intake {
   background: #FAF5EF;
   border-radius: 14px;
-  padding: 20px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* Hover effect for entire container */
 #buyer-intake:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   box-shadow: 0 16px 36px rgba(110, 13, 37, 0.16);
 }
 
@@ -93,14 +89,4 @@
 }
 
 #submitBtn:disabled {
-  background: #999;
-  cursor: not-allowed;
-}
-
-/* ===== Status Text ===== */
-#otpStatus {
-  display: block;
-  margin-top: 6px;
-  font-size: 13px;
-  color: #333;
-}
+  b
