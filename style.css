@@ -16,20 +16,26 @@
 }
 
 /* Ensure consistent sizing */
-#buyer-intake, #buyer-intake * { box-sizing: border-box; }
+#buyer-intake, #buyer-intake * { 
+  box-sizing: border-box; 
+}
 
 /* ===== 2-column grids ===== */
-/* Replace your current .grid-2 / grid styles */
 .grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-top: 12px;
 }
+
+/* Special row for Phone + OTP button */
 .grid-right-btn {
-  /* send OTP button stays right-size next to input */
-  flex: none; /* button keeps intrinsic size */
+  display: grid;
+  grid-template-columns: 1fr auto; /* input full width + button auto */
+  gap: 12px;
+  align-items: end;                /* align button with input bottom */
 }
+
 /* Stack on small screens 
 @media (max-width: 640px) {
   .grid-2,
