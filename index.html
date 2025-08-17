@@ -187,7 +187,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
   import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-  // --- Firebase project config (yours) ---
+  // --- ✅ Your new Firebase config ---
   const firebaseConfig = {
     apiKey: "AIzaSyAUNl5bZif51a8b5FC5kKqZs40KlP5lP74",
     authDomain: "tharaga-n.firebaseapp.com",
@@ -195,7 +195,7 @@
     appId: "1:122537471507:web:346c29119a352cc87059e6"
   };
 
-  // --- Init ---
+  // Init
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   auth.languageCode = 'en';
@@ -208,37 +208,33 @@
   document.getElementById('referrer').value     = document.referrer || '';
 
   // Elements
-  const phoneInput       = document.getElementById('phone');
-  const sendOtpBtn       = document.getElementById('sendOtpBtn');
-  const otpBlock         = document.getElementById('otpBlock');
-  const verifyOtpBtn     = document.getElementById('verifyOtpBtn');
-  const otpStatus        = document.getElementById('otpStatus');
-  const submitBtn        = document.getElementById('submitBtn');
-  const otpVerifiedField = document.getElementById('otp_verified');
-  const otpInputs        = document.querySelectorAll('.otp-input');
+  const form              = document.getElementById('buyerForm');
+  const phoneInput        = document.getElementById('phone');
+  const sendOtpBtn        = document.getElementById('sendOtpBtn');
+  const otpBlock          = document.getElementById('otpBlock');
+  const verifyOtpBtn      = document.getElementById('verifyOtpBtn');
+  const otpStatus         = document.getElementById('otpStatus');
+  const submitBtn         = document.getElementById('submitBtn');
+  const otpVerifiedField  = document.getElementById('otp_verified');
+  const otpInputs         = document.querySelectorAll('.otp-input');
 
-  // --- Correct invisible reCAPTCHA setup (v9 modular order) ---
-  function initRecaptcha() {
+  // ---- reCAPTCHA setup ----
+  function initRecaptcha(){
     if (window.recaptchaVerifier) return;
     window.recaptchaVerifier = new RecaptchaVerifier(
-      auth,                 // ✅ first arg is auth (modular SDK)
-      'otp-recaptcha',      // ✅ container id
-      {
-        size: 'invisible',
-        callback: () => { /* token generated */ },
-        'expired-callback': () => {
-          try { window.recaptchaVerifier.clear(); } catch(e){}
-          window.recaptchaVerifier = null;
-        }
-      }
+      'otp-recaptcha',
+      { size: 'invisible' },
+      auth
     );
+    window.recaptchaVerifier.render().then(id => {
+      console.log('reCAPTCHA ready:', id);
+    });
   }
   initRecaptcha();
 
   // OTP input helpers
-  function getEnteredOTP() {
-    return Array.from(otpInputs).map(i => i.value).join('');
-  }
+  function getEnteredOTP(){ return Array.from(otpInputs).map(i => i.value).join(''); }
+
   otpInputs.forEach((input, i) => {
     input.addEventListener('input', () => {
       input.value = input.value.replace(/\D/g, '').slice(0, 1);
@@ -246,7 +242,7 @@
     });
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Backspace' && !input.value && i > 0) otpInputs[i - 1].focus();
-      if (e.key === 'ArrowLeft'  && i > 0)                  otpInputs[i - 1].focus();
+      if (e.key === 'ArrowLeft'  && i > 0) otpInputs[i - 1].focus();
       if (e.key === 'ArrowRight' && i < otpInputs.length-1) otpInputs[i + 1].focus();
     });
   });
@@ -274,17 +270,15 @@
     try {
       initRecaptcha();
       const e164 = '+91' + raw;
-      const appVerifier = window.recaptchaVerifier;
-      confirmationResult = await signInWithPhoneNumber(auth, e164, appVerifier);
+      confirmationResult = await signInWithPhoneNumber(auth, e164, window.recaptchaVerifier);
       otpStatus.textContent = 'OTP sent. Please check your SMS.';
     } catch (err) {
-      console.error(err);
-      otpStatus.textContent = humanPhoneError(err);
-      // reset widget so user can retry
+      console.error('send OTP error:', err);
+      otpStatus.textContent = mapPhoneError(err) || 'Could not send OTP. Please try again.';
       try {
-        const widgetId = await window.recaptchaVerifier.render();
-        grecaptcha.reset(widgetId);
-      } catch(e){}
+        const id = await window.recaptchaVerifier.render();
+        if (window.grecaptcha && id) window.grecaptcha.reset(id);
+      } catch (_) {}
     } finally {
       sendOtpBtn.disabled = false;
     }
@@ -304,37 +298,33 @@
       submitBtn.disabled = false;
       submitBtn.style.cursor = 'pointer';
     } catch (err) {
-      console.error(err);
+      console.error('verify error:', err);
       otpStatus.textContent = 'Invalid code. Please try again.';
     }
   });
 
-  // Block submit if OTP not verified
-  document.getElementById('buyerForm').addEventListener('submit', (e) => {
+  // Guard submit until verified
+  form.addEventListener('submit', (e) => {
     if (otpVerifiedField.value !== 'true') {
       e.preventDefault();
       alert('Please verify OTP before submitting.');
     }
   });
 
-  // Friendly error mapping
-  function humanPhoneError(err){
-    const code = (err && err.code) || '';
+  function mapPhoneError(err){
+    const code = err?.code || '';
     switch (code) {
       case 'auth/invalid-app-credential':
-      case 'auth/missing-app-credential':
-        return 'reCAPTCHA failed. Please try again.';
-      case 'auth/operation-not-allowed':
-        return 'Phone sign-in not enabled for this project.';
-      case 'auth/too-many-requests':
-        return 'Too many attempts. Try again later.';
-      case 'auth/quota-exceeded':
-        return 'SMS quota exceeded. Try again later.';
-      default:
-        return 'Could not send OTP. Please try again.';
+      case 'auth/missing-app-credential': return 'reCAPTCHA failed. Please try again.';
+      case 'auth/operation-not-allowed':  return 'Phone sign-in is not enabled for this project.';
+      case 'auth/too-many-requests':      return 'Too many attempts. Try again later.';
+      case 'auth/quota-exceeded':         return 'SMS quota exceeded. Try again later.';
+      case 'auth/network-request-failed': return 'Network error. Check your connection.';
+      default: return err?.message;
     }
   }
 </script>
+
 
 </body>
 
