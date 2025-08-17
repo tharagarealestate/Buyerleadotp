@@ -179,8 +179,8 @@
     </small>
   </form>
 
-  <!-- Firebase reCAPTCHA mount (invisible) 
-  <div id="otp-recaptcha" style="height:0;"></div>-->
+  <!-- Firebase reCAPTCHA mount (invisible) -->
+  <div id="otp-recaptcha" style="height:0;"></div>
 </section>
 
 <script type="module">
@@ -198,7 +198,7 @@
   // --- Init ---
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  auth.useDeviceLanguage();
+  auth.languageCode = 'en';
 
   // UTM + referrer capture
   const params = new URLSearchParams(window.location.search);
@@ -217,6 +217,24 @@
   const otpVerifiedField = document.getElementById('otp_verified');
   const otpInputs        = document.querySelectorAll('.otp-input');
 
+  // --- Correct invisible reCAPTCHA setup (v9 modular order) ---
+  function initRecaptcha() {
+    if (window.recaptchaVerifier) return;
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      auth,                 // ✅ first arg is auth (modular SDK)
+      'otp-recaptcha',      // ✅ container id
+      {
+        size: 'invisible',
+        callback: () => { /* token generated */ },
+        'expired-callback': () => {
+          try { window.recaptchaVerifier.clear(); } catch(e){}
+          window.recaptchaVerifier = null;
+        }
+      }
+    );
+  }
+  initRecaptcha();
+
   // OTP input helpers
   function getEnteredOTP() {
     return Array.from(otpInputs).map(i => i.value).join('');
@@ -228,8 +246,8 @@
     });
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Backspace' && !input.value && i > 0) otpInputs[i - 1].focus();
-      if (e.key === 'ArrowLeft'  && i > 0) otpInputs[i - 1].focus();
-      if (e.key === 'ArrowRight' && i < otpInputs.length - 1) otpInputs[i + 1].focus();
+      if (e.key === 'ArrowLeft'  && i > 0)                  otpInputs[i - 1].focus();
+      if (e.key === 'ArrowRight' && i < otpInputs.length-1) otpInputs[i + 1].focus();
     });
   });
   otpInputs[0].addEventListener('paste', (e) => {
@@ -239,22 +257,9 @@
     if (text.length === 6) otpInputs[5].focus();
   });
 
-  let recaptchaVerifier = null;
   let confirmationResult = null;
 
-  async function setupInvisibleRecaptcha() {
-    // Clear any previous instance (important if user re-tries)
-    if (recaptchaVerifier && recaptchaVerifier.clear) {
-      try { recaptchaVerifier.clear(); } catch {}
-    }
-    recaptchaVerifier = new RecaptchaVerifier(
-      'sendOtpBtn',                    // bind to the button (invisible)
-      { size: 'invisible' },
-      auth
-    );
-    await recaptchaVerifier.render();  // ensure it’s ready
-  }
-
+  // Send OTP
   sendOtpBtn.addEventListener('click', async () => {
     const raw = phoneInput.value.trim();
     if (!/^[6-9]\d{9}$/.test(raw)) {
@@ -267,18 +272,25 @@
     sendOtpBtn.disabled = true;
 
     try {
-      await setupInvisibleRecaptcha();
+      initRecaptcha();
       const e164 = '+91' + raw;
-      confirmationResult = await signInWithPhoneNumber(auth, e164, recaptchaVerifier);
+      const appVerifier = window.recaptchaVerifier;
+      confirmationResult = await signInWithPhoneNumber(auth, e164, appVerifier);
       otpStatus.textContent = 'OTP sent. Please check your SMS.';
     } catch (err) {
       console.error(err);
-      // Show the real error code to help diagnose if anything is still off
-      otpStatus.textContent = `Could not send OTP. (${err.code || 'unknown'})`;
+      otpStatus.textContent = humanPhoneError(err);
+      // reset widget so user can retry
+      try {
+        const widgetId = await window.recaptchaVerifier.render();
+        grecaptcha.reset(widgetId);
+      } catch(e){}
+    } finally {
       sendOtpBtn.disabled = false;
     }
   });
 
+  // Verify OTP
   verifyOtpBtn.addEventListener('click', async () => {
     try {
       const code = getEnteredOTP();
@@ -293,7 +305,7 @@
       submitBtn.style.cursor = 'pointer';
     } catch (err) {
       console.error(err);
-      otpStatus.textContent = 'Invalid OTP. Please try again.';
+      otpStatus.textContent = 'Invalid code. Please try again.';
     }
   });
 
@@ -304,6 +316,24 @@
       alert('Please verify OTP before submitting.');
     }
   });
+
+  // Friendly error mapping
+  function humanPhoneError(err){
+    const code = (err && err.code) || '';
+    switch (code) {
+      case 'auth/invalid-app-credential':
+      case 'auth/missing-app-credential':
+        return 'reCAPTCHA failed. Please try again.';
+      case 'auth/operation-not-allowed':
+        return 'Phone sign-in not enabled for this project.';
+      case 'auth/too-many-requests':
+        return 'Too many attempts. Try again later.';
+      case 'auth/quota-exceeded':
+        return 'SMS quota exceeded. Try again later.';
+      default:
+        return 'Could not send OTP. Please try again.';
+    }
+  }
 </script>
 
 </body>
