@@ -27,8 +27,10 @@
   margin-top: 12px;
 }
 .grid-right-btn {
-  /* send OTP button stays right-size next to input */
-  flex: none; /* button keeps intrinsic size */
+  display: grid;
+  grid-template-columns: 1fr auto; /* input full width + button auto */
+  gap: 12px;
+  align-items: end;                /* ✅ aligns button with bottom of input */
 }
 /* Stack on small screens 
 @media (max-width: 640px) {
