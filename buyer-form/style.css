@@ -1,0 +1,206 @@
+/* ===== Buyer Form Container (whole card) ===== */
+#buyer-intake {
+  max-width: 760px;
+  margin: 40px auto;
+  padding: 24px;
+  font-family: 'Poppins', sans-serif;
+
+  background: #FAF5EF;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+#buyer-intake:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(110, 13, 37, 0.16);
+}
+
+/* Ensure consistent sizing */
+#buyer-intake, #buyer-intake * { box-sizing: border-box; }
+
+/* ===== 2-column grids ===== */
+/* Replace your current .grid-2 / grid styles */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+.grid-right-btn {
+  display: grid;
+  grid-template-columns: 1fr auto; /* input full width + button auto */
+  gap: 12px;
+  align-items: end;                /* ✅ aligns button with bottom of input */
+}
+/* Stack on small screens 
+@media (max-width: 640px) {
+  .grid-2,
+  .grid-2.grid-right-btn {
+    grid-template-columns: 1fr;
+  }
+}*/
+
+/* ===== Labels & Inputs ===== */
+#buyer-intake label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+#buyer-intake input,
+#buyer-intake select,
+#buyer-intake textarea {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+/* Uniform control heights so rows align perfectly */
+#buyer-intake input,
+#buyer-intake select {
+  height: 48px;                     /* <<< same as button */
+  padding: 10px;
+}
+#buyer-intake textarea {
+  min-height: 96px;
+  padding: 10px;
+}
+
+#buyer-intake input:focus,
+#buyer-intake select:focus,
+#buyer-intake textarea:focus {
+  border-color: #0e0e0e;
+  outline: none;
+}
+
+/* ===== OTP Inputs ===== */
+.otp-container {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.otp-input {
+  width: 42px;
+  height: 50px;
+  font-size: 20px;
+  text-align: center;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.2s ease;
+}
+.otp-input:focus {
+  border-color: #0e0e0e;
+  outline: none;
+}
+
+/* ===== Buttons ===== */
+#sendOtpBtn,
+#verifyOtpBtn,
+#submitBtn {
+  height: 48px;                     /* <<< matches input/select height */
+  padding: 0 16px;                  /* height controlled above */
+  border: none;
+  border-radius: 10px;
+  background: #0e0e0e;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  display: inline-flex;             /* perfect centering of the text */
+  align-items: center;
+  justify-content: center;
+}
+
+#sendOtpBtn:hover,
+#verifyOtpBtn:hover,
+#submitBtn:hover:enabled {
+  background: #2c2c2c;
+  transform: translateY(-1px);
+}
+
+#submitBtn:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+/* ===== Status Text ===== */
+#otpStatus {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #333;
+}
+
+
+/* ========== MOBILE COMPACT MODE (to prevent inner scroll in iframe) ========== */
+@media (max-width:640px){
+
+  /* tighten outer spacing */
+  #buyer-intake{
+    margin: 12px auto;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+
+  /* compact grids */
+  .grid-2{
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .grid-right-btn{
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+
+  /* smaller labels */
+  #buyer-intake label{
+    font-size: 12px;
+    margin-bottom: 2px;
+  }
+
+  /* shrink inputs */
+  #buyer-intake input,
+  #buyer-intake select{
+    height: 36px;
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+  #buyer-intake textarea{
+    min-height: 70px;
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+
+  /* OTP inputs smaller */
+  .otp-container{
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .otp-input{
+    width: 32px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  /* compact buttons */
+  #sendOtpBtn,
+  #verifyOtpBtn,
+  #submitBtn{
+    height: 36px;
+    padding: 0 12px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+
+  /* status text smaller */
+  #otpStatus{
+    font-size: 11px;
+    margin-top: 4px;
+  }
+}
