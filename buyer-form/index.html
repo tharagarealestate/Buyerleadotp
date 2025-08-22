@@ -55,9 +55,12 @@
       <label style="display:block;">
         <span>Phone (India)</span>
         <input required type="tel" name="phone" id="phone"
-               pattern="^[6-9]\\d{9}$"
-               placeholder="10-digit mobile number"
-               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
+          inputmode="numeric"
+          pattern="^[6-9][0-9]{9}$"
+          title="Enter a 10-digit Indian mobile number starting with 6–9"
+          placeholder="10-digit mobile number"
+
+          style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
       </label>
 
       <style>
@@ -296,8 +299,8 @@
   import { pipeline }     from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.14.1/dist/transformers.min.js";
 
   // ——— Paste your Supabase anon config (browser-safe) ———
-  const SUPABASE_URL = "YOUR_SUPABASE_URL_HERE";
-  const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY_HERE";
+  const SUPABASE_URL = "Yhttps://wedevtjjmdvngyshqdro.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndlZGV2dGpqbWR2bmd5c2hxZHJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0NzYwMzgsImV4cCI6MjA3MTA1MjAzOH0.Ex2c_sx358dFdygUGMVBohyTVto6fdEQ5nydDRh9m6M";
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // Reuse the same model as ingestion
