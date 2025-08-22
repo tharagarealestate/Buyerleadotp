@@ -334,108 +334,130 @@
   const otpVerifiedField = document.getElementById('otp_verified');
 
   // Submit: embed → RPC → render
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (otpVerifiedField.value !== 'true') { alert('Please verify OTP first.'); return; }
+  // ---------- Replace the whole submit handler with this block ----------
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (otpVerifiedField.value !== 'true') { alert('Please verify OTP first.'); return; }
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Finding matches…';
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Finding matches…';
 
-    const f = new FormData(form);
-    const payload = Object.fromEntries(f.entries());
+  const f = new FormData(form);
+  const payload = Object.fromEntries(f.entries());
 
+  try {
+    // 1) Build the query text
+    const qtext = [
+      payload.location || '',
+      payload.property_type || '',
+      payload.budget || '',
+      (payload.notes || '')
+    ].filter(Boolean).join(' ').trim();
+
+    // 2) Create embedding in browser
+    const extractor = await getExtractor();
+    const reps = await extractor([mkQuery(qtext)], { pooling: 'mean', normalize: true });
+    const vec = reps.tolist()[0];
+    if (!vec || vec.length !== 384) throw new Error(`Bad vector dim: ${vec?.length}`);
+    const q_vec_text = toVectorText(vec);
+
+    // 3) Optional: store buyer (skip if table doesn't exist or RLS prevents)
     try {
-      // 1) Build the query text
-      const qtext = [
-        payload.location || '',
-        payload.property_type || '',
-        payload.budget || '',
-        (payload.notes || '')
-      ].filter(Boolean).join(' ').trim();
+      await supabase.from('buyers').insert([{
+        name: payload.name,
+        email: payload.email,
+        phone: payload.phone,
+        location: payload.location,
+        budget: payload.budget,
+        property_type: payload.property_type,
+        timeline: payload.timeline,
+        financing: payload.financing,
+        notes: payload.notes || '',
+        utm_source: payload.utm_source || '',
+        utm_medium: payload.utm_medium || '',
+        utm_campaign: payload.utm_campaign || '',
+        referrer: payload.referrer || '',
+        otp_verified: true
+      }]);
+    } catch (e) {
+      console.warn('Skipping buyer insert (table/policy may not exist):', e?.message || e);
+    }
 
-      // 2) Create embedding in browser
-      const extractor = await getExtractor();
-      const reps = await extractor([mkQuery(qtext)], { pooling: 'mean', normalize: true });
-      const vec = reps.tolist()[0];
-      if (!vec || vec.length !== 384) throw new Error(`Bad vector dim: ${vec?.length}`);
-      const q_vec_text = toVectorText(vec);
+    // 4) Derive RPC filters
+    const { min: _budget_min, max: _budget_max } = parseBudgetRange(payload.budget || '');
+    const _city  = payload.location?.split(',')[0]?.trim() || null;
+    const _ptype = payload.property_type || null;
 
-      // 3) Optional: store buyer (skip if table doesn't exist or RLS prevents)
-      try {
-        await supabase.from('buyers').insert([{
-          name: payload.name,
-          email: payload.email,
-          phone: payload.phone,
-          location: payload.location,
-          budget: payload.budget,
-          property_type: payload.property_type,
-          timeline: payload.timeline,
-          financing: payload.financing,
-          notes: payload.notes || '',
-          utm_source: payload.utm_source || '',
-          utm_medium: payload.utm_medium || '',
-          utm_campaign: payload.utm_campaign || '',
-          referrer: payload.referrer || '',
-          otp_verified: true
-        }]);
-      } catch (e) {
-        console.warn('Skipping buyer insert (table/policy may not exist):', e?.message || e);
-      }
+    // 5) Call hybrid RPC (vector text signature)
+    const { data, error } = await supabase.rpc('match_candidates_hybrid', {
+      q_vec_text,
+      _city,
+      _ptype,
+      _budget_min,
+      _budget_max,
+      _bedrooms_min: null,
+      _bathrooms_min: null,
+      _verified_only: false,
+      _want_metro: true,
+      _k: 20
+    });
 
-      // 4) Derive RPC filters
-      const { min: _budget_min, max: _budget_max } = parseBudgetRange(payload.budget || '');
-      const _city  = payload.location?.split(',')[0]?.trim() || null;
-      const _ptype = payload.property_type || null;
-
-      // 5) Call hybrid RPC (vector text signature)
-      const { data, error } = await supabase.rpc('match_candidates_hybrid', {
-        q_vec_text,
-        _city,
-        _ptype,
-        _budget_min,
-        _budget_max,
-        _bedrooms_min: null,
-        _bathrooms_min: null,
-        _verified_only: false,
-        _want_metro: true,
-        _k: 20
-      });
-
-      if (error) throw error;
+    if (error) throw error;
 
     // 6) Store compact matches in sessionStorage (reduce size; keep only fields we need)
-const minimal = (data || []).map(r => ({
-  id: r.id,
-  title: r.title || r.name || 'Property',
-  image: (r.images && r.images[0]) || r.image || null,
-  city: r.city || null,
-  locality: r.locality || null,
-  price_inr: r.price_inr == null ? null : Number(r.price_inr),
-  bedrooms: r.bedrooms ?? null,
-  bathrooms: r.bathrooms ?? null,
-  sem_sim: r.sem_sim ?? r.similarity ?? r.score ?? 0,
-  nearest_metro: r.nearest_metro ?? null,
-  km_to_metro: r.km_to_metro ?? null
-}));
+    const minimal = (data || []).map(r => ({
+      id: r.id,
+      title: r.title || r.name || 'Property',
+      image: (r.images && r.images[0]) || r.image || null,
+      city: r.city || null,
+      locality: r.locality || null,
+      price_inr: r.price_inr == null ? null : Number(r.price_inr),
+      bedrooms: r.bedrooms ?? null,
+      bathrooms: r.bathrooms ?? null,
+      sem_sim: r.sem_sim ?? r.similarity ?? r.score ?? 0,
+      nearest_metro: r.nearest_metro ?? null,
+      km_to_metro: r.km_to_metro ?? null
+    }));
 
-// Store search meta too (so listing page can show “Search: Chennai, Apartment, ₹50L – ₹1Cr”)
-const meta = {
-  search: {
-    location: payload.location || '',
-    property_type: payload.property_type || '',
-    budget: payload.budget || ''
-  },
-  created_at: Date.now()
-};
+    // Store search meta too
+    const meta = {
+      search: {
+        location: payload.location || '',
+        property_type: payload.property_type || '',
+        budget: payload.budget || ''
+      },
+      created_at: Date.now()
+    };
 
-const params = new URLSearchParams({
-  location: payload.location || '',
-  property_type: payload.property_type || '',
-  budget: payload.budget || ''
+    // Try to save into sessionStorage (works only if both pages share origin)
+    try {
+      sessionStorage.setItem('tharaga_matches_v1', JSON.stringify({ meta, results: minimal }));
+    } catch (e) {
+      console.warn('Could not save matches to sessionStorage (size?):', e);
+      // fallback: render minimal matches on this page
+      return renderMatches(data || []);
+    }
+
+    // Build query params (lightweight filters) and redirect to listing page
+    const params = new URLSearchParams({
+      location: payload.location || '',
+      property_type: payload.property_type || '',
+      budget: payload.budget || ''
+    });
+
+    window.location.href = 'https://tharaga.co.in/verified-property-listings?' + params.toString();
+
+  } catch (err) {
+    console.error(err);
+    alert('Matching failed: ' + (err?.message || err));
+  } finally {
+    // Re-enable button (this runs even though we redirected — harmless)
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Get My Property Matches';
+  }
 });
+// ---------- end replacement ----------
 
-// Redirect to listing page to show cards
-window.location.href = 'https://tharaga.co.in/verified-property-listings?' + params.toString();
 
   function renderMatches(rows) {
     const container = document.getElementById('aiMatches');
