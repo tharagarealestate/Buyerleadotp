@@ -1,53 +1,57 @@
 /* Container */
 #buyer-intake {
   max-width: 760px;
-  margin: 32px auto;
+  margin: 40px auto;
   padding: 24px;
   font-family: 'Poppins', sans-serif;
   background: #FAF5EF;
   border-radius: 14px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
-#buyer-intake h3 { text-align: center; margin: 0 0 8px; font-weight: 600; }
-#buyer-intake .subtitle { text-align: center; margin: 0 0 16px; opacity: .8; }
+#buyer-intake .title { text-align:center; margin:0 0 8px; font-weight:600; }
+#buyer-intake .subtitle { text-align:center; margin:0 0 16px; }
 
 /* Grid */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
-.grid-right-btn { grid-template-columns: 1fr auto; align-items: end; }
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+.grid-right-btn {
+  display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end;
+}
 
 /* Inputs */
-#buyer-intake label { display: block; font-size: 14px; font-weight: 500; margin: 6px 0; }
+#buyer-intake label { display:block; font-size:14px; font-weight:500; margin-bottom:4px; }
 #buyer-intake input, #buyer-intake select, #buyer-intake textarea {
-  width: 100%; border-radius: 8px; border: 1px solid #ddd; font-size: 14px; padding: 10px;
+  width: 100%; border-radius: 8px; border: 1px solid #ddd; font-size:14px; padding:10px;
 }
+#buyer-intake input, #buyer-intake select { height: 48px; }
 #buyer-intake textarea { min-height: 96px; }
+
+/* OTP */
+.otp-container { display:flex; gap:8px; justify-content:center; margin-bottom:12px; }
+.otp-input { width:42px; height:50px; font-size:20px; text-align:center; border:2px solid #ccc; border-radius:8px; }
+.otp-input:focus { border-color:#0e0e0e; outline:none; }
 
 /* Buttons */
 #sendOtpBtn, #verifyOtpBtn, #submitBtn {
-  height: 48px; padding: 0 16px; border: none; border-radius: 10px;
-  background: #0e0e0e; color: #fff; font-weight: 600; cursor: pointer;
+  height:48px; padding:0 16px; border:none; border-radius:10px; background:#0e0e0e; color:#fff;
+  font-weight:600; cursor:pointer;
 }
-#submitBtn:disabled { background: #999; cursor: not-allowed; }
+#submitBtn:disabled { background:#999; cursor:not-allowed; }
 
-/* OTP */
-.otp-block { margin-top: 12px; text-align: center; }
-.otp-container { display: flex; gap: 8px; justify-content: center; margin-bottom: 12px; }
-.otp-input { width: 42px; height: 50px; font-size: 20px; text-align: center; border: 2px solid #ccc; border-radius: 8px; }
-
-/* Matches */
-.matches { margin-top: 18px; background: #fff; border-radius: 12px; padding: 14px; }
-.match-card { border: 1px solid #eee; border-radius: 10px; padding: 12px; margin-bottom: 10px; background: #fff; }
-.match-title { font-weight: 600; margin-bottom: 4px; }
-.match-sub { opacity: .85; margin-bottom: 4px; }
-.match-detail { font-size: 14px; }
-
-/* Status */
-.ai-status { margin-top: 12px; text-align: center; font-size: 13px; color: #333; }
-.empty { text-align: center; opacity: .8; }
+/* Match cards */
+.match-card { border:1px solid #ddd; border-radius:10px; padding:12px; margin-bottom:12px; background:#fff; }
 
 /* Mobile */
-@media (max-width:640px) {
-  .grid-2, .grid-right-btn { grid-template-columns: 1fr; gap: 8px; }
-  #buyer-intake { margin: 12px auto; padding: 12px; border-radius: 10px; }
-  #sendOtpBtn, #verifyOtpBtn, #submitBtn { height: 40px; }
+@media (max-width:640px){
+  #buyer-intake{ margin:12px auto; padding:12px; }
+  .grid-2{ grid-template-columns: 1fr; gap:8px; }
+  .grid-right-btn{ grid-template-columns: 1fr auto; gap:8px; }
+  #buyer-intake input, #buyer-intake select{ height:36px; font-size:12px; padding:6px 8px; }
+  #buyer-intake textarea{ min-height:70px; font-size:12px; padding:6px 8px; }
+  .otp-input{ width:32px; height:40px; font-size:16px; }
+  #sendOtpBtn, #verifyOtpBtn, #submitBtn{ height:36px; padding:0 12px; font-size:12px; }
 }

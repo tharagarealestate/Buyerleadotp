@@ -1,13 +1,3 @@
-# netlify.toml — single build table
-
+# netlify.toml
 [build]
-  publish   = "buyer-form"          # <- serve index.html from buyer-form/
-  functions = "netlify/functions"   # <- serverless functions directory
-
-# CORS for your Netlify Functions (buyerMatch, etc.)
-[[headers]]
-  for = "/.netlify/functions/*"
-  [headers.values]
-    Access-Control-Allow-Origin = "*"
-    Access-Control-Allow-Methods = "POST, OPTIONS"
-    Access-Control-Allow-Headers = "Content-Type"
+  publish = "buyer-form"   # <— points to the folder that contains index.html
