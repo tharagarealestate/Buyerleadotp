@@ -403,16 +403,39 @@
 
       if (error) throw error;
 
-      // 6) Render
-      renderMatches(data || []);
-    } catch (err) {
-      console.error(err);
-      alert('Matching failed: ' + (err?.message || err));
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Get My Property Matches';
-    }
-  });
+    // 6) Store compact matches in sessionStorage (reduce size; keep only fields we need)
+const minimal = (data || []).map(r => ({
+  id: r.id,
+  title: r.title || r.name || 'Property',
+  image: (r.images && r.images[0]) || r.image || null,
+  city: r.city || null,
+  locality: r.locality || null,
+  price_inr: r.price_inr == null ? null : Number(r.price_inr),
+  bedrooms: r.bedrooms ?? null,
+  bathrooms: r.bathrooms ?? null,
+  sem_sim: r.sem_sim ?? r.similarity ?? r.score ?? 0,
+  nearest_metro: r.nearest_metro ?? null,
+  km_to_metro: r.km_to_metro ?? null
+}));
+
+// Store search meta too (so listing page can show “Search: Chennai, Apartment, ₹50L – ₹1Cr”)
+const meta = {
+  search: {
+    location: payload.location || '',
+    property_type: payload.property_type || '',
+    budget: payload.budget || ''
+  },
+  created_at: Date.now()
+};
+
+const params = new URLSearchParams({
+  location: payload.location || '',
+  property_type: payload.property_type || '',
+  budget: payload.budget || ''
+});
+
+// Redirect to listing page to show cards
+window.location.href = 'https://tharaga.co.in/verified-property-listings?' + params.toString();
 
   function renderMatches(rows) {
     const container = document.getElementById('aiMatches');
