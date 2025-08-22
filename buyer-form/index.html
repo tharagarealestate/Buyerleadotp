@@ -8,61 +8,109 @@
 </head>
 <body>
 
-<section id="buyer-intake">
-  <h3 class="title">Get Matched to Verified Properties</h3>
-  <p class="subtitle">OTP-verified leads only. No spam. No brokerage.</p>
+<!-- ===== Verified Buyer Form (Drop-in) ===== -->
+<section id="buyer-intake" style="max-width: 760px; margin: 0 auto; padding: 24px;">
+  <h3 style="font-family: 'Poppins', sans-serif; font-weight: 600; text-align:center; margin-bottom: 12px;">
+    Get Matched to Verified Properties
+  </h3>
+  <p style="text-align:center; margin:0 0 16px;">OTP-verified leads only. No spam. No brokerage.</p>
 
-  <form id="buyerForm" name="buyer-intake" method="POST" style="background:#FAF5EF; border-radius:12px; padding:16px;">
-    <!-- Hidden helpers -->
-    <input type="hidden" name="utm_source"   id="utm_source">
-    <input type="hidden" name="utm_medium"   id="utm_medium">
+  <!-- Netlify Forms attrs -->
+  <form name="buyer-intake"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        data-netlify-recaptcha="true"
+        id="buyerForm"
+        style="background:#FAF5EF; border-radius:12px; padding:16px; font-family:'Poppins',sans-serif">
+
+    <!-- Netlify Forms hidden helpers -->
+    <input type="hidden" name="form-name" value="buyer-intake" />
+    <p style="display:none;">
+      <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
+    </p>
+
+    <!-- UTM + referrer capture -->
+    <input type="hidden" name="utm_source" id="utm_source">
+    <input type="hidden" name="utm_medium" id="utm_medium">
     <input type="hidden" name="utm_campaign" id="utm_campaign">
     <input type="hidden" name="referrer"     id="referrer">
     <input type="hidden" name="otp_verified" id="otp_verified" value="false">
 
     <div class="grid-2">
-      <label>
+      <label style="display:block;">
         <span>Name</span>
-        <input required type="text" name="name" placeholder="Your full name">
+        <input required type="text" name="name" placeholder="Your full name"
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
       </label>
 
-      <label>
+      <label style="display:block;">
         <span>Email</span>
-        <input required type="email" name="email" placeholder="you@example.com">
+        <input required type="email" name="email" placeholder="you@example.com"
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
       </label>
     </div>
 
     <div class="grid-2 grid-right-btn">
-      <label>
+      <label style="display:block;">
         <span>Phone (India)</span>
-        <input required type="tel" name="phone" id="phone" pattern="^[6-9]\\d{9}$" placeholder="10-digit mobile number">
+        <input required type="tel" name="phone" id="phone"
+               pattern="^[6-9]\\d{9}$"
+               placeholder="10-digit mobile number"
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
       </label>
 
-      <button type="button" id="sendOtpBtn">Send OTP</button>
+      <style>
+        .otp-input {
+          width: 40px;
+          height: 50px;
+          font-size: 20px;
+          text-align: center;
+          border: 2px solid #ccc;
+          border-radius: 8px;
+        }
+        .otp-input:focus {
+          border-color: #0e0e0e;
+          outline: none;
+        }
+      </style>
+
+
+      <button type="button" id="sendOtpBtn"
+        style="padding:10px; border:none; border-radius:8px; background:#0e0e0e; color:#fff; cursor:pointer;">
+        Send OTP
+      </button>
+
     </div>
 
     <div id="otpBlock" style="display:none; margin-top:12px; text-align:center;">
-      <div class="otp-container">
-        <input type="text" maxlength="1" class="otp-input" inputmode="numeric" pattern="[0-9]*">
-        <input type="text" maxlength="1" class="otp-input" inputmode="numeric" pattern="[0-9]*">
-        <input type="text" maxlength="1" class="otp-input" inputmode="numeric" pattern="[0-9]*">
-        <input type="text" maxlength="1" class="otp-input" inputmode="numeric" pattern="[0-9]*">
-        <input type="text" maxlength="1" class="otp-input" inputmode="numeric" pattern="[0-9]*">
-        <input type="text" maxlength="1" class="otp-input" inputmode="numeric" pattern="[0-9]*">
+      <div class="otp-container" style="display:flex; gap:8px; justify-content:center; margin-bottom:12px;">
+        <input type="text" maxlength="1" class="otp-input" inputmode="numeric" pattern="[0-9]*" aria-label="OTP digit 1">
+        <input type="text" maxlength="1" class="otp-input" inputmode="numeric" pattern="[0-9]*" aria-label="OTP digit 2">
+        <input type="text" maxlength="1" class="otp-input" inputmode="numeric" pattern="[0-9]*" aria-label="OTP digit 3">
+        <input type="text" maxlength="1" class="otp-input" inputmode="numeric" pattern="[0-9]*" aria-label="OTP digit 4">
+        <input type="text" maxlength="1" class="otp-input" inputmode="numeric" pattern="[0-9]*" aria-label="OTP digit 5">
+        <input type="text" maxlength="1" class="otp-input" inputmode="numeric" pattern="[0-9]*" aria-label="OTP digit 6">
       </div>
-      <button type="button" id="verifyOtpBtn">Verify OTP</button>
-      <small id="otpStatus"></small>
+      <button type="button" id="verifyOtpBtn"
+              style="padding:10px 20px; border:none; border-radius:8px; background:#0e0e0e; color:#fff; cursor:pointer;">
+        Verify OTP
+      </button>
+      <small id="otpStatus" style="display:block; margin-top:6px;"></small>
     </div>
 
+    <!-- Buyer profiling -->
     <div class="grid-2">
-      <label>
+      <label style="display:block;">
         <span>Preferred City / Area</span>
-        <input required type="text" name="location" placeholder="e.g., Anna Nagar, OMR, Coimbatore">
+        <input required type="text" name="location" placeholder="e.g., Anna Nagar, OMR, Coimbatore"
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
       </label>
 
-      <label>
+      <label style="display:block;">
         <span>Budget</span>
-        <select required name="budget">
+        <select required name="budget"
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
           <option value="">Select</option>
           <option>₹50L – ₹1Cr</option>
           <option>₹1Cr – ₹2Cr</option>
@@ -72,10 +120,11 @@
       </label>
     </div>
 
-    <div class="grid-2">
-      <label>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
+      <label style="display:block;">
         <span>Property Type</span>
-        <select required name="property_type">
+        <select required name="property_type"
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
           <option value="">Select</option>
           <option>Apartment</option>
           <option>Villa</option>
@@ -84,9 +133,10 @@
         </select>
       </label>
 
-      <label>
+      <label style="display:block;">
         <span>Buying Timeline</span>
-        <select required name="timeline">
+        <select required name="timeline"
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
           <option value="">Select</option>
           <option>ASAP (0–30 days)</option>
           <option>1–3 months</option>
@@ -96,9 +146,10 @@
       </label>
     </div>
 
-    <label>
+    <label style="display:block; margin-top:12px;">
       <span>Financing</span>
-      <select required name="financing">
+      <select required name="financing"
+              style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
         <option value="">Select</option>
         <option>Loan pre-approved</option>
         <option>Loan required</option>
@@ -106,13 +157,23 @@
       </select>
     </label>
 
-    <label style="margin-top:12px;">
+    <label style="display:block; margin-top:12px;">
       <span>Anything else?</span>
-      <textarea name="notes" rows="3" placeholder="Bedrooms, amenities, exact localities..."></textarea>
+      <textarea name="notes" rows="3" placeholder="Bedrooms, amenities, exact localities..."
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;"></textarea>
     </label>
 
-    <button id="submitBtn" type="submit" disabled>Get My Property Matches</button>
-    <small style="display:block; margin-top:8px; opacity:0.8;">By submitting, you agree to be contacted by Tharaga. OTP verification is required to prevent spam.</small>
+    <!-- Your existing Google reCAPTCHA v2/v3 widget works with Netlify Forms 
+    <div data-netlify-recaptcha="true" style="margin-top:12px;"></div>-->
+
+    <button id="submitBtn" type="submit" disabled
+            style="margin-top:14px; width:100%; padding:12px; border:none; border-radius:10px; background:#0e0e0e; color:#fff; font-weight:600; cursor:not-allowed;">
+      Get My Property Matches
+    </button>
+
+    <small style="display:block; margin-top:8px; opacity:0.8;">
+      By submitting, you agree to be contacted by Tharaga. OTP verification is required to prevent spam.
+    </small>
   </form>
 
   <!-- Invisible reCAPTCHA mount -->
