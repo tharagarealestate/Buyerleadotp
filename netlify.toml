@@ -1,7 +1,10 @@
-# netlify.toml
-[build]
-  functions = "netlify/functions"
+# netlify.toml — single build table
 
+[build]
+  publish   = "buyer-form"          # <- serve index.html from buyer-form/
+  functions = "netlify/functions"   # <- serverless functions directory
+
+# CORS for your Netlify Functions (buyerMatch, etc.)
 [[headers]]
   for = "/.netlify/functions/*"
   [headers.values]
